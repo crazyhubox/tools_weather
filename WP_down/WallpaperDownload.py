@@ -13,6 +13,15 @@ from os.path import isdir
 class WallpaperDownload:
     
     def requests_interface(self,page:int,cate:str)->None:
+        """request the json_interface and return the json data for img_url
+        
+        Arguments:
+            page {int} -- the pageNum for download
+            cate {str} -- the cate of img for downloading
+        
+        Returns:
+            str -- json data
+        """
         num = page*12
         url = 'https://bird.ioliu.cn/v2?'
         params = {
@@ -29,8 +38,19 @@ class WallpaperDownload:
 
 
     def downloa_img(self,page:int,cate:str)->bytes:
+        """after getting the urls for downloading,create the tasks for loop,
+        yield the name consititutes of its url ,the img_bytes and img_tag
+        
+        Arguments:
+            page {int} -- [pageNum for downloading]
+            cate {str} -- [img_cate]
+                
+        Yields:
+            url -- [for name]
+            bytes -- [img_bytes]
+            tag -- [img_tag]
+        """
         datas = self.requests_interface(page,cate)
-        # print(datas)
         urls = [x['url'] for x in datas]
         tasks = [get(x) for x in urls]
         resluts = run(tasks)
@@ -43,12 +63,21 @@ class WallpaperDownload:
         
 
     async def save(self,bits:bytes,name:str,tag:str)->None:
+        """
+        asynchronously save the imgs
+        """
         async with ay_open(f'{tag}/{name}','wb') as fp:
                 await fp.write(bits)
                 print('finished!')
             
         
     def main_(self,page:str,catagory:str)->None:
+        """The main function for run the events loop
+        
+        Arguments:
+            page {str} -- img_page for downlia_img
+            catagory {str} -- img_cate for downloa_img
+        """
         loop = asyncio.get_event_loop()
         coros = [self.save(y,x,t) for x,y,t in self.downloa_img(page,catagory)]
         tasks = [asyncio.ensure_future(x) for x in coros]
@@ -66,6 +95,8 @@ class WallpaperDownload:
     
     
     def for_download(self):
+        """the outside interface for main project
+        """
         start,end,cate = self.select()
         self.run_(start,end,cate)
         
