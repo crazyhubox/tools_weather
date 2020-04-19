@@ -6,7 +6,7 @@ from weather.sight_pro import GetSight_province
 from weather.BILIsearch import BiLi
 from weather.meituan import Meituan
 from weather.youdao import YouDaoTranslate
-
+from WP_down.WallpaperDownload import WallpaperDownload
 def main():
     while True:
         try:
@@ -22,7 +22,7 @@ def main():
 def run():
     select = input('''请选择功能(1-4):
 1.查询天气情况      10.翻译      
-2.查询周边景点             
+2.查询周边景点      11.壁纸下载       
 3.查询当地社区          
 4.查询周边城市            
 5.查询省3A景区
@@ -48,7 +48,8 @@ def run():
         '7':BiLi().search,
         '8':Mt.search_Hotel,
         '9':Mt.search_NotHotel,
-        '10':YouDaoTranslate().translate
+        '10':YouDaoTranslate().translate,
+        '11':WallpaperDownload().for_download
     }
     print('='*100)
     switcher[select]()
