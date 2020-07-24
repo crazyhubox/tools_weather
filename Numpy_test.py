@@ -18,6 +18,8 @@ class QqRoom:
     my_url = 'https://user.qzone.qq.com/970161120/infocenter'
     def __init__(self):
         option = webdriver.ChromeOptions()
+        # prefs = {"profile.managed_default_content_settings.images":2}
+        # option.add_experimental_option("prefs",prefs)
         option.add_argument('headless')
         # self.driver = webdriver.Chrome(chrome_options=option)
         self.driver = webdriver.Chrome()
@@ -39,44 +41,14 @@ class QqRoom:
                 self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'.head-info')))
             except:
                 pass
-            # cookies = self.driver.get_cookies()
-            # for each in cookies:
-            #     print(each)
-            # self.driver.find_element_by_css_selector('#aIcenter').click()
             self.driver.find_element_by_css_selector('div.nav-list-inner a').click()
 
-            x_ssl_info = self.driver.get_cookie('x-stgw-ssl-info')['value']
-            pgv_pvi = self.driver.get_cookie('pgv_pvi')['value']
-            pgv_pvid = self.driver.get_cookie('pgv_pvid')['value']
-            pgv_si = self.driver.get_cookie('pgv_si')['value']
-            p_skey = self.driver.get_cookie('p_skey')['value']
-            pgv_info = self.driver.get_cookie('pgv_info')['value']
-            uin = self.driver.get_cookie('uin')['value']
-            ptcz = self.driver.get_cookie('ptcz')['value']
-            p_uin = self.driver.get_cookie('p_uin')['value']
-            pt4_token = self.driver.get_cookie('pt4_token')['value']
-            Loading = self.driver.get_cookie('Loading')['value']
-            rk = self.driver.get_cookie('RK')['value']
-
-            cookie = {
-                'x-stgw-ssl-info':x_ssl_info,
-                'pgv_pvi':pgv_pvi,
-                'pgv_pvid':pgv_pvid,
-                'pgv_si':pgv_si,
-                'p_skey':p_skey,
-                'pgv_info':pgv_info,
-                'uin':uin,
-                'ptcz':ptcz,
-                'p_uin':p_uin,
-                'pt4_token':pt4_token,
-                'Loading':Loading,
-                'RK':rk,
-                'cpu_performance_v8':'2'
-                
-            }
+            cookie = {}
+            for each in self.driver.get_cookies():
+                cookie[each['name']] = each['value']
             return cookie
         except Exception as e:
-            # self.driver.quit()
+            self.driver.quit()
             print((e))
         else:
             self.driver.quit()
@@ -95,7 +67,7 @@ class QqRoom:
             'upgrade-insecure-requests':'1',
             'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
         }
-        # print(headers['if-modified-since'])
+
         while True:
             cookies = self.get_cookies()
             if cookies:
